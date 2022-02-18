@@ -15,7 +15,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     if (!req.query.code) {
-        return res.status(200).send(defaultResponse(false, 'No code.'))
+        return res.status(200).json(defaultResponse(false, 'No code.'))
     }
 
     try {
@@ -53,7 +53,7 @@ export default async function handler(
             Object.entries(permissionsCount).sort(([, a], [, b]) => b - a)
         )
 
-        res.status(200).send(
+        res.status(200).json(
             defaultResponse(
                 true,
                 null,
@@ -66,7 +66,7 @@ export default async function handler(
             res.redirect('/api/login')
         } else {
             console.log(exc)
-            res.status(500).send(defaultResponse(false, 'Failed to fetch user infos.'))
+            res.status(500).json(defaultResponse(false, 'Failed to fetch user infos.'))
         }
     }
 }
