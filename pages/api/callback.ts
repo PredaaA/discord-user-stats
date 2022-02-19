@@ -1,14 +1,10 @@
-import { PartialGuild, TokenRequestResult, User as _User } from 'discord-oauth2'
-import DiscordHTTPError from 'discord-oauth2/lib/eris/errors/DiscordHTTPError'
-import { Permissions, UserFlags, UserFlagsString } from 'discord.js'
+import { PartialGuild, TokenRequestResult } from 'discord-oauth2'
+import { Permissions, UserFlags } from 'discord.js'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { User } from '../../src/types'
 import oauth from './_oauth'
 import defaultResponse from './_utils'
 
-interface User extends _User {
-    flags_formatted?: UserFlagsString[],
-    public_flags_formatted?: UserFlagsString[],
-}
 
 export default async function handler(
     req: NextApiRequest,
@@ -57,16 +53,16 @@ export default async function handler(
             defaultResponse(
                 true,
                 null,
-                { 'user': userInfo, 'userGuilds': { count: totalGuilds, ownedGuilds: ownedGuilds, permissions: permissionsSorted }}
+                { 'user': userInfo, 'userGuilds': { count: totalGuilds, ownedGuilds: ownedGuilds, permissions: permissionsSorted } }
             )
         )
 
     } catch (exc) {
-        if (exc instanceof DiscordHTTPError) {
-            res.redirect('/api/login')
-        } else {
-            console.log(exc)
-            res.status(500).json(defaultResponse(false, 'Failed to fetch user infos.'))
-        }
+        // if (exc instanceof DiscordHTTPError) {
+        //     res.redirect('/login')
+        // } else {
+        console.log(exc)
+        res.status(400).json(defaultResponse(false, 'Failed to fetch user infos.'))
+        // }
     }
 }
